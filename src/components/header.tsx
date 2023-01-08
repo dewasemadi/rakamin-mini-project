@@ -1,13 +1,17 @@
 import { Show } from './show'
+import Spinner from './spinner'
 import { useState } from 'react'
 import BaseButton from './baseButton'
 import PlusIcon from 'assets/plus.svg'
 import ModalAddGroup from './modalAddGroup'
 import { useNavigate } from 'react-router-dom'
 import { removeTokenFromLocalStorage } from 'utils/tokenManager'
-import Spinner from './spinner'
 
-export default function Header() {
+interface HeaderProps {
+  onScrollToRight: () => void
+}
+
+export default function Header({ onScrollToRight }: HeaderProps) {
   const [isShowModal, setIsShowModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
@@ -46,7 +50,7 @@ export default function Header() {
 
       {/* modal */}
       <Show when={isShowModal}>
-        <ModalAddGroup onCloseModal={onCloseModal} />
+        <ModalAddGroup onCloseModal={onCloseModal} onScrollToRight={onScrollToRight} />
       </Show>
     </header>
   )

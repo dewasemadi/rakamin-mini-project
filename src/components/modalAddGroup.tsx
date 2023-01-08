@@ -1,18 +1,19 @@
-import TextField from './textField'
-import BaseButton from './baseButton'
-import CloseIcon from 'assets/close.svg'
-import { useQueryClient, useMutation } from 'react-query'
-import { createTodo, TTodo } from 'services/todoService'
-import { joiResolver } from '@hookform/resolvers/joi'
-import { useForm, Controller } from 'react-hook-form'
 import Joi from 'joi'
-import MultilineTextField from './multilineTextField'
 import { Show } from './show'
 import Spinner from './spinner'
 import ModalBase from './modalBase'
+import TextField from './textField'
+import BaseButton from './baseButton'
+import CloseIcon from 'assets/close.svg'
+import { joiResolver } from '@hookform/resolvers/joi'
+import { useForm, Controller } from 'react-hook-form'
+import MultilineTextField from './multilineTextField'
+import { createTodo, TTodo } from 'services/todoService'
+import { useQueryClient, useMutation } from 'react-query'
 
 interface ModalAddGroupProps {
   onCloseModal: () => void
+  onScrollToRight: () => void
 }
 
 const defaultValues = {
@@ -25,13 +26,14 @@ const createTodoSchema = Joi.object({
   description: Joi.string().required(),
 })
 
-export default function ModalAddGroup({ onCloseModal }: ModalAddGroupProps) {
+export default function ModalAddGroup({ onCloseModal, onScrollToRight }: ModalAddGroupProps) {
   const queryClient = useQueryClient()
   const { mutate, reset, isLoading } = useMutation(createTodo, {
     onSuccess: () => {
       reset()
       queryClient.invalidateQueries('todos')
       onCloseModal()
+      onScrollToRight()
     },
   })
   const {

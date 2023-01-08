@@ -26,7 +26,14 @@ const registerSchema = Joi.object({
     .required(),
   name: Joi.string().required(),
   password: Joi.string().min(6).required().label('Password'),
-  password_confirmation: Joi.string().min(6).required().valid(Joi.ref('password')).label('Password Confirmation'),
+  password_confirmation: Joi.string()
+    .min(6)
+    .required()
+    .valid(Joi.ref('password'))
+    .label('Password Confirmation')
+    .messages({
+      'any.only': '{{#label}} does not match',
+    }),
 })
 
 export default function Register() {

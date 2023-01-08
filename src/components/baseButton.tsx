@@ -4,6 +4,7 @@ interface BaseButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   children?: JSX.Element | string
   iconWidth?: number
   className?: string
+  imgClassName?: string
   startIcon?: string
   variant?: 'primary' | 'neutral' | 'danger' | 'text'
 }
@@ -22,14 +23,14 @@ function setVariant(variant: string) {
 }
 
 export default function BaseButton(props: BaseButtonProps) {
-  const { children, className, startIcon, variant = 'primary', iconWidth, ...rest } = props
+  const { children, className, imgClassName, startIcon, variant = 'primary', iconWidth, ...rest } = props
   const variantClass = setVariant(variant)
 
   return (
     <button {...rest} className={`h-fit py-1 px-4 text-center rounded-lg font-bold ${variantClass} ${className}`}>
       <div className={startIcon ? 'flex items-center gap-2' : ''}>
         <Show when={!!startIcon}>
-          <img src={startIcon} alt='icon' className='inline-block' width={iconWidth} />
+          <img src={startIcon} alt='icon' className={`inline-block ${imgClassName}`} width={iconWidth} />
         </Show>
         {children}
       </div>

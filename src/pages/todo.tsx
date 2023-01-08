@@ -17,17 +17,21 @@ export default function Todo() {
   const scrollRef = React.createRef() as React.MutableRefObject<HTMLDivElement>
   const colors = ['green', 'yellow', 'red', 'light-green']
   const { data, isLoading } = useQuery('todos', getTodos)
-  const handlePrevBtnClick = () => {
+  const onPrevClicked = () => {
     scrollRef.current.scrollLeft -= 1500
   }
 
-  const handleNextBtnClick = () => {
+  const onNextClicked = () => {
     scrollRef.current.scrollLeft += 1500
+  }
+
+  const onScrollToRight = () => {
+    scrollRef.current.scrollLeft += Number.MAX_SAFE_INTEGER
   }
 
   return (
     <div>
-      <Header />
+      <Header onScrollToRight={onScrollToRight} />
       <Show when={isLoading}>
         <CenterLayout className='mt-[68px] max-sm:mt-[92px]'>
           <Spinner />
@@ -41,7 +45,7 @@ export default function Todo() {
       <div className='flex'>
         <Show when={isDesktop}>
           <BaseButton
-            onClick={handlePrevBtnClick}
+            onClick={onPrevClicked}
             className='m-auto w-fit block rounded-full px-1 py-1 fixed top-[50%] left-5 shadow-lg'
             startIcon={ArrowLeft}
             variant='neutral'
@@ -68,7 +72,7 @@ export default function Todo() {
 
         <Show when={isDesktop}>
           <BaseButton
-            onClick={handleNextBtnClick}
+            onClick={onNextClicked}
             className='m-auto w-fit block rounded-full px-1 py-1 fixed top-[50%] right-5 shadow-lg'
             startIcon={ArrowRight}
             variant='neutral'

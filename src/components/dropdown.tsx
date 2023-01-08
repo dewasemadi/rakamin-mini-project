@@ -97,7 +97,9 @@ export default function Dropdown(props: DropdownProps) {
   return (
     <div>
       <div
-        className='absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+        className={`${
+          currentIdx === todosData?.length - 1 ? 'right-0' : 'left-0'
+        } absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`}
         role='menu'
         aria-orientation='vertical'
         aria-labelledby='menu-button'
@@ -109,6 +111,7 @@ export default function Dropdown(props: DropdownProps) {
               variant='text'
               startIcon={arrowRight}
               className='font-semibold w-full py-3 hover:text-primary'
+              imgClassName='mr-3'
               onClick={() => onMoveClicked('next')}
               onMouseOver={() => setArrowRight(HoverArrowRightIcon)}
               onMouseOut={() => setArrowRight(ArrowRightIcon)}
@@ -121,6 +124,7 @@ export default function Dropdown(props: DropdownProps) {
               variant='text'
               startIcon={arrowLeft}
               className='font-semibold w-full py-3 hover:text-primary'
+              imgClassName='mr-3'
               onClick={() => onMoveClicked('prev')}
               onMouseOver={() => setArrowLeft(HoverArrowLeftIcon)}
               onMouseOut={() => setArrowLeft(ArrowLeftIcon)}
@@ -132,6 +136,7 @@ export default function Dropdown(props: DropdownProps) {
             variant='text'
             startIcon={edit}
             className='font-semibold w-full py-3 hover:text-primary'
+            imgClassName='mr-3'
             onClick={onOpenEditModal}
             onMouseOver={() => setEdit(HoverEditIcon)}
             onMouseOut={() => setEdit(EditIcon)}
@@ -142,6 +147,7 @@ export default function Dropdown(props: DropdownProps) {
             variant='text'
             startIcon={trash}
             className='font-semibold w-full py-3 hover:text-danger'
+            imgClassName='mr-3'
             onClick={onOpenDeleteModal}
             onMouseOver={() => setTrash(HoverTrashIcon)}
             onMouseOut={() => setTrash(TrashIcon)}
