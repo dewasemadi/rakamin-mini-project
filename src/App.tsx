@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import NotFound from 'pages/404'
+import Login from 'pages/login'
+import Register from 'pages/register'
+import Todo from 'pages/todo'
+import ScrollToTop from 'hooks/useScrollToTop'
+import RequireAuth from 'hooks/useRequireAuth'
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <ScrollToTop>
+        <Routes>
+          <Route path='*' element={<NotFound />} />
+          <Route path='/' element={<Navigate to='/v1/todo' />} />
+          <Route path='/v1' element={<Outlet />}>
+            <Route path='register' element={<Register />} />
+            <Route path='login' element={<Login />} />
+            <Route
+              path='todo'
+              element={
+                <RequireAuth redirectTo='/v1/login'>
+                  <Todo />
+                </RequireAuth>
+              }
+            />
+          </Route>
+        </Routes>
+      </ScrollToTop>
+    </BrowserRouter>
+  )
 }
-
-export default App;
