@@ -11,13 +11,15 @@ import MoreHorizontalIcon from 'assets/more-horizontal.svg'
 import ModalCreateOrEditItem from './modalCreateOrEditItem'
 import Dropdown from './dropdown'
 import OutsideWrapper from 'hooks/useOutsideWrapper'
+import { Draggable } from 'react-beautiful-dnd'
 
 interface GroupCardProps {
   todosData: any
-  id: number
+  todoId: number
   title: string
   color?: string
   description: string
+  placeholder: any
 }
 
 interface ItemCardProps {
@@ -33,7 +35,7 @@ interface ProgressProps {
 }
 
 function ItemCard({ children }: ItemCardProps) {
-  return <div className='bg-neutral-20 p-4 border border-neutral-40 rounded-md'>{children}</div>
+  return <div className={`bg-neutral-20 p-4 border border-neutral-40 rounded-md`}>{children}</div>
 }
 
 function Progress({ todosData, todoId, itemId, name, progress_percentage }: ProgressProps) {
@@ -105,7 +107,7 @@ function setColor(color: string | undefined): any {
         background: 'bg-danger-surface border-danger-border',
         header: 'text-danger border-danger',
       }
-    case 'light-green':
+    case 'lime':
       return {
         background: 'bg-success-surface border-success-border',
         header: 'text-success border-success',
@@ -118,13 +120,14 @@ function setColor(color: string | undefined): any {
   }
 }
 
-export default function GroupCard({ todosData, id, title, color, description }: GroupCardProps) {
+export default function GroupCard(props: GroupCardProps) {
+  const { todosData, todoId, title, color, description, placeholder } = props
   const [isShowModal, setIsShowModal] = useState(false)
-  const [todoId, setTodoId] = useState<number>(id)
-  const { data, isLoading } = useQuery(['items', id], () => getItemsById(id))
+  const [currentTodoId, setCurrentTodoId] = useState<number>(todoId)
+  const { data, isLoading } = useQuery(['items', todoId], () => getItemsById(todoId))
   const { background, header } = setColor(color)
   const onOpenModal = () => {
-    setTodoId(id)
+    setCurrentTodoId(todoId)
     setIsShowModal(true)
   }
   const onCloseModal = () => {
@@ -151,19 +154,30 @@ export default function GroupCard({ todosData, id, title, color, description }: 
         <Show when={data?.length > 0}>
           <div className='flex flex-col gap-3'>
             {data?.map(({ id, name, progress_percentage }: any, idx: number) => (
-              <ItemCard key={idx}>
-                <h1 className='font-bold text-neutral-90 mb-2'>{name}</h1>
-                <Divider />
-                {/* debug this later */}
-                <Progress
-                  todosData={todosData}
-                  todoId={todoId}
-                  itemId={id}
-                  name={name}
-                  progress_percentage={progress_percentage}
-                />
-              </ItemCard>
+              <Draggable key={id} draggableId={id.toString()} index={idx}>
+                {(provided: any, snapshot: any) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={{ ...provided.draggableProps.style, opacity: snapshot.isDragging ? '0.5' : '1' }}
+                  >
+                    <ItemCard>
+                      <h1 className='font-bold text-neutral-90 mb-2'>{name}</h1>
+                      <Divider />
+                      <Progress
+                        todosData={todosData}
+                        todoId={currentTodoId}
+                        itemId={id}
+                        name={name}
+                        progress_percentage={progress_percentage}
+                      />
+                    </ItemCard>
+                  </div>
+                )}
+              </Draggable>
             ))}
+            {placeholder}
           </div>
         </Show>
       </div>
@@ -179,7 +193,7 @@ export default function GroupCard({ todosData, id, title, color, description }: 
 
       {/* modal for create task */}
       <Show when={isShowModal}>
-        <ModalCreateOrEditItem todoId={todoId} onCloseModal={onCloseModal} />
+        <ModalCreateOrEditItem todoId={currentTodoId} onCloseModal={onCloseModal} />
       </Show>
     </div>
   )
