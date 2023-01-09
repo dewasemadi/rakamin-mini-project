@@ -38,7 +38,8 @@ function ItemCard({ children }: ItemCardProps) {
 
 function Progress({ todosData, todoId, itemId, name, progress_percentage }: ProgressProps) {
   const [currentIdx, setCurrentIdx] = useState(0)
-  const progressColor = progress_percentage === 100 ? 'bg-success' : 'bg-primary'
+  const progress = progress_percentage >= 0 && progress_percentage <= 100 ? progress_percentage : 100
+  const progressColor = progress === 100 ? 'bg-success' : 'bg-primary'
   const [isShowDropdown, setIsShowDropdown] = useState(false)
   const onShowDropdown = () => {
     setIsShowDropdown(true)
@@ -53,12 +54,12 @@ function Progress({ todosData, todoId, itemId, name, progress_percentage }: Prog
   return (
     <div className='flex items-center gap-2 mt-2'>
       <div className='w-full bg-gray-200 rounded-full h-4 dark:bg-neutral-30'>
-        <div className={`h-4 rounded-full ${progressColor}`} style={{ width: `${progress_percentage}%` }}></div>
+        <div className={`h-4 rounded-full ${progressColor}`} style={{ width: `${progress}%` }}></div>
       </div>
-      <Show when={progress_percentage < 100}>
-        <p className='text-neutral-70'>{progress_percentage}%</p>
+      <Show when={progress < 100}>
+        <p className='text-neutral-70'>{progress}%</p>
       </Show>
-      <Show when={progress_percentage === 100}>
+      <Show when={progress === 100}>
         <img src={ChecklistIcon} alt='checklist' width={22} />
       </Show>
       <div className='relative'>
@@ -77,7 +78,7 @@ function Progress({ todosData, todoId, itemId, name, progress_percentage }: Prog
               todoId={todoId}
               itemId={itemId}
               name={name}
-              progress_percentage={progress_percentage}
+              progress_percentage={progress}
               onCloseDropdown={onCloseDropdown}
             />
           </OutsideWrapper>
