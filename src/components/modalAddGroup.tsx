@@ -5,8 +5,8 @@ import ModalBase from './modalBase'
 import TextField from './textField'
 import BaseButton from './baseButton'
 import CloseIcon from 'assets/close.svg'
+import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
-import { useForm, Controller } from 'react-hook-form'
 import MultilineTextField from './multilineTextField'
 import { createTodo, TTodo } from 'services/todoService'
 import { useQueryClient, useMutation } from 'react-query'
@@ -61,33 +61,23 @@ export default function ModalAddGroup({ onCloseModal, onScrollToRight }: ModalAd
         </div>
         {/*body*/}
         <div className='relative py-1 px-6 flex-auto'>
-          <Controller
+          <TextField
             name='title'
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label='Title'
-                type='text'
-                placeholder='title'
-                errorMessage={errors.title?.message}
-              />
-            )}
+            label='Title'
+            type='text'
+            placeholder='title'
+            errorMessage={errors.title?.message}
           />
 
-          <Controller
+          <MultilineTextField
             name='description'
             control={control}
-            render={({ field }) => (
-              <MultilineTextField
-                {...field}
-                label='Description'
-                placeholder='description'
-                className='mt-5'
-                rows={3}
-                errorMessage={errors.description?.message}
-              />
-            )}
+            label='Description'
+            placeholder='description'
+            className='mt-5'
+            rows={3}
+            errorMessage={errors.description?.message}
           />
         </div>
         {/*footer*/}

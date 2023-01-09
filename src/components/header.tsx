@@ -20,7 +20,7 @@ export default function Header({ onScrollToRight }: HeaderProps) {
     setTimeout(() => {
       removeTokenFromLocalStorage()
       navigate('/v1/login', { replace: true })
-    }, 1 * 1000) // 1 seconds
+    }, 500) // .5 seconds
   }
   const onOpenModal = () => {
     setIsShowModal(true)
@@ -30,7 +30,7 @@ export default function Header({ onScrollToRight }: HeaderProps) {
   }
 
   return (
-    <header className='bg-white shadow fixed w-full z-50 top-0 min-h-68px'>
+    <header className='bg-white shadow fixed w-full z-50 top-0 min-h-[68px]'>
       <div className='container flex justify-between py-4 items-end'>
         <div className='flex gap-4 items-center max-sm:justify-between max-sm:flex-col max-sm:gap-0 max-sm:items-start'>
           <h1 className='text-lg font-bold'>Product Roadmap</h1>

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import BaseButton from 'components/baseButton'
 import TextField from 'components/textField'
 import { joiResolver } from '@hookform/resolvers/joi'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { TRegister } from 'services/authService'
 import { useMutation } from 'react-query'
@@ -68,57 +68,43 @@ export default function Register() {
       </Show>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
+        <TextField
           name='name'
           control={control}
-          render={({ field }) => (
-            <TextField {...field} label='Name' type='text' placeholder='name' errorMessage={errors.name?.message} />
-          )}
+          label='Name'
+          type='text'
+          placeholder='name'
+          errorMessage={errors.name?.message}
         />
 
-        <Controller
+        <TextField
           name='email'
           control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label='Email'
-              type='email'
-              placeholder='email'
-              className='mt-4'
-              errorMessage={errors.email?.message}
-            />
-          )}
+          label='Email'
+          type='email'
+          placeholder='email'
+          className='mt-4'
+          errorMessage={errors.email?.message}
         />
 
-        <Controller
+        <TextField
           name='password'
           control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label='Password'
-              type='password'
-              placeholder='password'
-              className='mt-4'
-              errorMessage={errors.password?.message}
-            />
-          )}
+          label='Password'
+          type='password'
+          placeholder='password'
+          className='mt-4'
+          errorMessage={errors.password?.message}
         />
 
-        <Controller
+        <TextField
           name='password_confirmation'
           control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label='Password Confirmation'
-              type='password'
-              placeholder='password confirmation'
-              className='mt-4'
-              errorMessage={errors.password_confirmation?.message}
-            />
-          )}
+          label='Password Confirmation'
+          type='password'
+          placeholder='password confirmation'
+          className='mt-4'
+          errorMessage={errors.password_confirmation?.message}
         />
 
         <Show when={isLoading}>

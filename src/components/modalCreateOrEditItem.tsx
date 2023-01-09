@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import TextField from './textField'
 import BaseButton from './baseButton'
 import CloseIcon from 'assets/close.svg'
 import { useQueryClient, useMutation } from 'react-query'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { createItemsById, updateItemsById } from 'services/itemService'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import Joi from 'joi'
 import { Show } from './show'
 import Spinner from './spinner'
@@ -33,6 +34,8 @@ interface TCreateOrEditItem {
 
 export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps) {
   const { todoId, itemId = 0, isEdit = false, name, progress_percentage, onCloseModal, onCloseDropdown } = props
+  const [currentName] = useState(name ? name : '')
+  const [currentProgress] = useState(progress_percentage ? progress_percentage : 0)
   const queryClient = useQueryClient()
   const createItemMutation = useMutation(createItemsById)
   const editItemMutation = useMutation(updateItemsById)
@@ -73,6 +76,12 @@ export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps)
     }
 
     if (isEdit) {
+      // don't make an api call if there is no input change
+      if (currentName === name && currentProgress === progress) {
+        onCloseModal()
+        onCloseDropdown?.()
+        return
+      }
       const editItemPayload = {
         todoId: todoId,
         itemId: itemId,
@@ -118,33 +127,23 @@ export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps)
         </div>
         {/*body*/}
         <div className='relative py-1 px-6 flex-auto'>
-          <Controller
+          <TextField
             name='name'
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label='Name'
-                type='text'
-                placeholder='type your task'
-                errorMessage={errors.name?.message}
-              />
-            )}
+            label='Name'
+            type='text'
+            placeholder='type your task'
+            errorMessage={errors.name?.message}
           />
 
-          <Controller
+          <TextField
             name='progress_percentage'
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label='Progress'
-                type='text'
-                placeholder='70%'
-                className='md:w-[50%] mt-5'
-                errorMessage={errors.progress_percentage?.message}
-              />
-            )}
+            label='Progress'
+            type='text'
+            placeholder='70%'
+            className='md:w-[50%] mt-5'
+            errorMessage={errors.progress_percentage?.message}
           />
         </div>
         {/*footer*/}

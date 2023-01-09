@@ -3,7 +3,7 @@ import { useState } from 'react'
 import BaseButton from 'components/baseButton'
 import TextField from 'components/textField'
 import { joiResolver } from '@hookform/resolvers/joi'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { TLogin } from 'services/authService'
 import { useMutation } from 'react-query'
@@ -62,27 +62,23 @@ export default function Login() {
       </Show>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
+        <TextField
           name='email'
           control={control}
-          render={({ field }) => (
-            <TextField {...field} label='Email' type='email' placeholder='email' errorMessage={errors.email?.message} />
-          )}
+          label='Email'
+          type='email'
+          placeholder='email'
+          errorMessage={errors.email?.message}
         />
 
-        <Controller
+        <TextField
           name='password'
           control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label='Password'
-              type='password'
-              placeholder='password'
-              className='mt-4'
-              errorMessage={errors.password?.message}
-            />
-          )}
+          label='Password'
+          type='password'
+          placeholder='password'
+          className='mt-4'
+          errorMessage={errors.password?.message}
         />
 
         <Show when={isLoading}>

@@ -1,4 +1,5 @@
 import { Show } from 'components/show'
+import { Controller } from 'react-hook-form'
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -6,6 +7,8 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   rows?: number
   className?: string
   errorMessage?: string
+  name: string
+  control: any
 }
 
 function setColor(isError: boolean) {
@@ -17,7 +20,8 @@ function setColor(isError: boolean) {
   }
 }
 
-export default function TextField({ label, placeholder, rows, className, errorMessage, ...rest }: TextFieldProps) {
+export default function TextField(props: TextFieldProps) {
+  const { label, placeholder, rows, className, errorMessage, name, control, ...rest } = props
   const color = setColor(!!errorMessage)
 
   return (
@@ -25,7 +29,19 @@ export default function TextField({ label, placeholder, rows, className, errorMe
       <label htmlFor='name' className='w-full block text-neutral-90 mb-2'>
         {label}
       </label>
-      <input {...rest} placeholder={placeholder} className={`w-full py-2 px-4 rounded-lg bg-white border-2 ${color}`} />
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <input
+            {...field}
+            {...rest}
+            autoComplete='on'
+            placeholder={placeholder}
+            className={`w-full py-2 px-4 rounded-lg bg-white border-2 ${color}`}
+          />
+        )}
+      />
       <Show when={!!errorMessage}>
         <p className='text-danger mt-1'>{errorMessage}</p>
       </Show>

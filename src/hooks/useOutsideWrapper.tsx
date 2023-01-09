@@ -6,7 +6,6 @@ export const useOutsideWrapper = (ref: React.RefObject<HTMLElement>, callback: (
     const onClickOutside = (e: any) => {
       if (ref.current && !ref.current.contains(e.target)) {
         callback()
-        console.log('clicked!')
       }
     }
 
