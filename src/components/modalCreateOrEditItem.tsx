@@ -59,18 +59,19 @@ export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps)
       return
     }
     const progress = removeCharInString(progress_percentage, '%')
-    if (progress > 100 || progress < 0) {
+
+    if (progress === 'not-a-number') {
       setError('progress_percentage', {
         type: 'manual',
-        message: 'Progress must be between 0% and 100%',
+        message: 'Progress must be a number',
       })
       return
     }
 
-    if (isNaN(progress)) {
+    if (progress > 100 || progress < 0) {
       setError('progress_percentage', {
         type: 'manual',
-        message: 'Progress must be a number',
+        message: 'Progress must be between 0% and 100%',
       })
       return
     }
