@@ -40,7 +40,7 @@ function ItemCard({ children }: ItemCardProps) {
 
 function Progress({ todosData, todoId, itemId, name, progress_percentage }: ProgressProps) {
   const [currentIdx, setCurrentIdx] = useState(0)
-  const progress = progress_percentage >= 0 && progress_percentage <= 100 ? progress_percentage : 100
+  const progress = progress_percentage < 0 ? 0 : progress_percentage > 100 ? 100 : progress_percentage
   const progressColor = progress === 100 ? 'bg-success' : 'bg-primary'
   const [isShowDropdown, setIsShowDropdown] = useState(false)
   const onShowDropdown = () => {
