@@ -1,6 +1,8 @@
 import { Show } from './show'
-import { useState } from 'react'
+import { ReactNode } from 'react'
+import { useContext, useState } from 'react'
 import { useQuery } from 'react-query'
+import { TodoContext } from 'context/todoContext'
 import { getItemsById } from 'services/itemService'
 import Spinner from 'components/spinner'
 import Divider from './divider'
@@ -11,42 +13,43 @@ import MoreHorizontalIcon from 'assets/more-horizontal.svg'
 import ModalCreateOrEditItem from './modalCreateOrEditItem'
 import Dropdown from './dropdown'
 import OutsideWrapper from 'hooks/useOutsideWrapper'
-import { Draggable } from 'react-beautiful-dnd'
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd'
 
 interface GroupCardProps {
-  todosData: any
   todoId: number
   title: string
   color?: string
   description: string
-  placeholder: any
+  isDraggingOver: boolean
+  placeholder: ReactNode
 }
 
 interface ItemCardProps {
   children: React.ReactNode
+  className?: string
 }
 
 interface ProgressProps {
-  todosData: any
   todoId: number
   itemId: number
   name: string
   progress_percentage: number
 }
 
-function ItemCard({ children }: ItemCardProps) {
-  return <div className={`bg-neutral-20 p-4 border border-neutral-40 rounded-md`}>{children}</div>
+function ItemCard({ children, className }: ItemCardProps) {
+  return <div className={`bg-neutral-20 p-4 border border-neutral-40 rounded-md ${className}`}>{children}</div>
 }
 
-function Progress({ todosData, todoId, itemId, name, progress_percentage }: ProgressProps) {
+function Progress({ todoId, itemId, name, progress_percentage }: ProgressProps) {
   const [currentIdx, setCurrentIdx] = useState(0)
+  const todosData = useContext(TodoContext)
   const progress = progress_percentage < 0 ? 0 : progress_percentage > 100 ? 100 : progress_percentage
   const progressColor = progress === 100 ? 'bg-success' : 'bg-primary'
   const [isShowDropdown, setIsShowDropdown] = useState(false)
   const onShowDropdown = () => {
     setIsShowDropdown(true)
     const idx = todosData?.findIndex((todo: any) => todo.id === todoId)
-    setCurrentIdx(idx)
+    setCurrentIdx(idx ? idx : 0)
   }
 
   const onCloseDropdown = () => {
@@ -75,7 +78,6 @@ function Progress({ todosData, todoId, itemId, name, progress_percentage }: Prog
         <Show when={isShowDropdown}>
           <OutsideWrapper callback={onCloseDropdown}>
             <Dropdown
-              todosData={todosData}
               currentIdx={currentIdx}
               todoId={todoId}
               itemId={itemId}
@@ -121,7 +123,7 @@ function setColor(color: string | undefined): any {
 }
 
 export default function GroupCard(props: GroupCardProps) {
-  const { todosData, todoId, title, color, description, placeholder } = props
+  const { todoId, title, color, description, isDraggingOver, placeholder } = props
   const [isShowModal, setIsShowModal] = useState(false)
   const [currentTodoId, setCurrentTodoId] = useState<number>(todoId)
   const { data, isLoading } = useQuery(['items', todoId], () => getItemsById(todoId))
@@ -147,15 +149,18 @@ export default function GroupCard(props: GroupCardProps) {
           <Spinner />
         </Show>
         <Show when={data?.length === 0}>
-          <ItemCard>
-            <h1 className='text-neutral-70'>No Task</h1>
-          </ItemCard>
+          <div>
+            <ItemCard className={isDraggingOver ? 'hidden' : 'block'}>
+              <h1 className='text-neutral-70'>No Task</h1>
+            </ItemCard>
+            {placeholder}
+          </div>
         </Show>
         <Show when={data?.length > 0}>
           <div className='flex flex-col gap-3'>
             {data?.map(({ id, name, progress_percentage }: any, idx: number) => (
               <Draggable key={id} draggableId={id.toString()} index={idx}>
-                {(provided: any, snapshot: any) => (
+                {(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -166,7 +171,6 @@ export default function GroupCard(props: GroupCardProps) {
                       <h1 className='font-bold text-neutral-90 mb-2'>{name}</h1>
                       <Divider />
                       <Progress
-                        todosData={todosData}
                         todoId={currentTodoId}
                         itemId={id}
                         name={name}

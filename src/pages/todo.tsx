@@ -3,15 +3,16 @@ import React from 'react'
 import CenterLayout from 'components/centerLayout'
 import Spinner from 'components/spinner'
 import { Show } from 'components/show'
-import { getTodos } from 'services/todoService'
+import { getTodos, TGetTOdo } from 'services/todoService'
 import GroupCard from 'components/groupCard'
 import BaseButton from 'components/baseButton'
 import ArrowRight from 'assets/arrow-right.svg'
 import ArrowLeft from 'assets/arrow-left.svg'
+import { TodoContext } from 'context/todoContext'
 import { useResponsive } from 'hooks/useResponsive'
 import { getItemsById, updateItemsById } from 'services/itemService'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot, DropResult } from 'react-beautiful-dnd'
 
 export default function Todo() {
   let counter = 0
@@ -19,7 +20,8 @@ export default function Todo() {
   const { isDesktop } = useResponsive()
   const scrollRef = React.createRef() as React.MutableRefObject<HTMLDivElement>
   const colors = ['green', 'yellow', 'red', 'lime']
-  const { data: todosData, isLoading: isTodosLoading } = useQuery('todos', getTodos)
+  const { data, isLoading: isTodosLoading } = useQuery<Array<TGetTOdo>>('todos', getTodos)
+  const todosData = data ?? []
   const getItemMutation = useMutation(getItemsById)
   const updateItemMutation = useMutation(updateItemsById)
   const onPrevClicked = () => {
@@ -31,7 +33,7 @@ export default function Todo() {
   }
 
   const onScrollToRight = () => {
-    scrollRef.current.scrollLeft += Number.MAX_SAFE_INTEGER
+    if (scrollRef) scrollRef.current.scrollLeft += Number.MAX_SAFE_INTEGER
   }
 
   const onDragEnd = (result: DropResult) => {
@@ -88,37 +90,39 @@ export default function Todo() {
         </Show>
 
         <Show when={todosData?.length > 0}>
-          <div
-            className='container mt-[68px] max-sm:mt-[92px] py-[24px] overflow-x-scroll md:no-scrollbar scroll-smooth scroll-mr-10'
-            ref={scrollRef}
-          >
-            <DragDropContext onDragEnd={onDragEnd}>
-              <div className='grid gap-4 grid-flow-col pb-24'>
-                {todosData?.map(({ id, title, description }: any, idx: number) => {
-                  if (counter % 4 === 0) counter = 0
-                  const color = colors[counter]
-                  counter++
-                  return (
-                    <Droppable key={id} droppableId={id.toString()}>
-                      {(provided: any) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                          <GroupCard
-                            todosData={todosData}
-                            todoId={id}
-                            title={title}
-                            description={description}
-                            color={color}
-                            key={idx}
-                            placeholder={provided.placeholder}
-                          />
-                        </div>
-                      )}
-                    </Droppable>
-                  )
-                })}
-              </div>
-            </DragDropContext>
-          </div>
+          <TodoContext.Provider value={todosData}>
+            <div
+              className='container mt-[68px] max-sm:mt-[92px] py-[24px] overflow-x-scroll md:no-scrollbar scroll-smooth scroll-mr-10'
+              ref={scrollRef}
+            >
+              <DragDropContext onDragEnd={onDragEnd}>
+                <div className='grid gap-4 grid-flow-col pb-24'>
+                  {todosData?.map(({ id, title, description }: any, idx: number) => {
+                    if (counter % 4 === 0) counter = 0
+                    const color = colors[counter]
+                    counter++
+                    return (
+                      <Droppable key={id} droppableId={id.toString()}>
+                        {(provided: DroppableProvided, snapshot: DroppableStateSnapshot) => (
+                          <div {...provided.droppableProps} ref={provided.innerRef}>
+                            <GroupCard
+                              todoId={id}
+                              title={title}
+                              description={description}
+                              color={color}
+                              key={idx}
+                              isDraggingOver={snapshot.isDraggingOver}
+                              placeholder={provided.placeholder}
+                            />
+                          </div>
+                        )}
+                      </Droppable>
+                    )
+                  })}
+                </div>
+              </DragDropContext>
+            </div>
+          </TodoContext.Provider>
         </Show>
 
         <Show when={isDesktop}>

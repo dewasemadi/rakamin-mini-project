@@ -1,5 +1,5 @@
 import { Show } from './show'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import ArrowRightIcon from 'assets/arrow-right.svg'
 import ArrowLeftIcon from 'assets/arrow-left.svg'
 import EditIcon from 'assets/edit-alt.svg'
@@ -14,9 +14,9 @@ import { useMutation, useQueryClient } from 'react-query'
 import { deleteItemsById, updateItemsById } from 'services/itemService'
 import ModalCreateOrEditItem from './modalCreateOrEditItem'
 import ModalDelete from './modalDelete'
+import { TodoContext } from 'context/todoContext'
 
 interface DropdownProps {
-  todosData: any
   todoId: number
   itemId: number
   currentIdx: number
@@ -27,7 +27,8 @@ interface DropdownProps {
 
 export default function Dropdown(props: DropdownProps) {
   const queryClient = useQueryClient()
-  const { todosData, todoId, itemId, currentIdx, name, progress_percentage, onCloseDropdown } = props
+  const todosData = useContext(TodoContext)
+  const { todoId, itemId, currentIdx, name, progress_percentage, onCloseDropdown } = props
   const [arrowRight, setArrowRight] = useState(ArrowRightIcon)
   const [arrowLeft, setArrowLeft] = useState(ArrowLeftIcon)
   const [edit, setEdit] = useState(EditIcon)

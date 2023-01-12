@@ -8,7 +8,7 @@ import CloseIcon from 'assets/close.svg'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import MultilineTextField from './multilineTextField'
-import { createTodo, TTodo } from 'services/todoService'
+import { createTodo, TUpdateTodo } from 'services/todoService'
 import { useQueryClient, useMutation } from 'react-query'
 
 interface ModalAddGroupProps {
@@ -44,7 +44,7 @@ export default function ModalAddGroup({ onCloseModal, onScrollToRight }: ModalAd
     defaultValues: defaultValues,
     resolver: joiResolver(createTodoSchema),
   })
-  const onSubmit = (data: TTodo) => mutate(data)
+  const onSubmit = (data: TUpdateTodo) => mutate(data)
 
   return (
     <ModalBase onCloseModal={onCloseModal}>
