@@ -1,5 +1,5 @@
-import axios, { AxiosResponse, AxiosError } from 'axios'
-import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from 'utils/tokenManager'
+import axios, {AxiosError, AxiosResponse} from 'axios'
+import {getTokenFromLocalStorage, removeTokenFromLocalStorage} from 'utils/tokenManager'
 
 /**
  * Axios instance config
@@ -20,6 +20,7 @@ const onRequestSuccess = (config: any) => {
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 }
+
 const onRequestError = (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
 
 /**

@@ -1,15 +1,15 @@
 import Joi from 'joi'
-import { Show } from './show'
+import {Show} from './show'
 import Spinner from './spinner'
 import ModalBase from './modalBase'
 import TextField from './textField'
 import BaseButton from './baseButton'
 import CloseIcon from 'assets/close.svg'
-import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi'
+import {useForm} from 'react-hook-form'
+import {joiResolver} from '@hookform/resolvers/joi'
 import MultilineTextField from './multilineTextField'
-import { createTodo, TUpdateTodo } from 'services/todoService'
-import { useQueryClient, useMutation } from 'react-query'
+import {createTodo, TUpdateTodo} from 'services/todoService'
+import {useMutation, useQueryClient} from 'react-query'
 
 interface ModalAddGroupProps {
   onCloseModal: () => void
@@ -26,9 +26,9 @@ const createTodoSchema = Joi.object({
   description: Joi.string().required(),
 })
 
-export default function ModalAddGroup({ onCloseModal, onScrollToRight }: ModalAddGroupProps) {
+export default function ModalAddGroup({onCloseModal, onScrollToRight}: ModalAddGroupProps) {
   const queryClient = useQueryClient()
-  const { mutate, reset, isLoading } = useMutation(createTodo, {
+  const {mutate, reset, isLoading} = useMutation(createTodo, {
     onSuccess: () => {
       reset()
       queryClient.invalidateQueries('todos')
@@ -36,11 +36,7 @@ export default function ModalAddGroup({ onCloseModal, onScrollToRight }: ModalAd
       onScrollToRight()
     },
   })
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const {control, handleSubmit, formState: {errors}} = useForm({
     defaultValues: defaultValues,
     resolver: joiResolver(createTodoSchema),
   })
@@ -87,7 +83,7 @@ export default function ModalAddGroup({ onCloseModal, onScrollToRight }: ModalAd
           </BaseButton>
 
           <Show when={isLoading}>
-            <Spinner />
+            <Spinner/>
           </Show>
           <Show when={!isLoading}>
             <BaseButton type='submit' className='border-2 border-primary hover:border-primary-dark'>

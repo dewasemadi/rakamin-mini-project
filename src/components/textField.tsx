@@ -1,5 +1,6 @@
-import { Show } from 'components/show'
-import { Controller } from 'react-hook-form'
+import {Show} from 'components/show'
+import {Controller} from 'react-hook-form'
+import React from "react";
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
@@ -21,7 +22,7 @@ function setColor(isError: boolean) {
 }
 
 export default function TextField(props: TextFieldProps) {
-  const { label, placeholder, rows, className, errorMessage, name, control, ...rest } = props
+  const {label, placeholder, rows, className, errorMessage, name, control, ...rest} = props
   const color = setColor(!!errorMessage)
 
   return (
@@ -32,7 +33,7 @@ export default function TextField(props: TextFieldProps) {
       <Controller
         name={name}
         control={control}
-        render={({ field }) => (
+        render={({field}) => (
           <input
             {...field}
             {...rest}

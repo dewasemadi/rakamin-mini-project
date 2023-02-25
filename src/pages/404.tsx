@@ -1,10 +1,10 @@
 import BaseButton from 'components/baseButton'
 import CenterLayout from 'components/centerLayout'
-import { useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 export default function NotFound() {
   const navigate = useNavigate()
-
+  
   return (
     <CenterLayout>
       <h1 className='font-bold text-2xl text-center'>Ups... page not found</h1>

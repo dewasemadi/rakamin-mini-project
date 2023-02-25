@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import TextField from './textField'
 import BaseButton from './baseButton'
 import CloseIcon from 'assets/close.svg'
-import { useQueryClient, useMutation } from 'react-query'
-import { joiResolver } from '@hookform/resolvers/joi'
-import { createItemsById, updateItemsById } from 'services/itemService'
-import { useForm } from 'react-hook-form'
+import {useMutation, useQueryClient} from 'react-query'
+import {joiResolver} from '@hookform/resolvers/joi'
+import {createItemsById, updateItemsById} from 'services/itemService'
+import {useForm} from 'react-hook-form'
 import Joi from 'joi'
-import { Show } from './show'
+import {Show} from './show'
 import Spinner from './spinner'
 import ModalBase from './modalBase'
-import { removeCharInString } from 'utils/formatter'
+import {removeCharInString} from 'utils/formatter'
 
 interface ModalCreateOrEditItemProps {
   todoId: number
@@ -33,7 +33,7 @@ interface TCreateOrEditItem {
 }
 
 export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps) {
-  const { todoId, itemId = 0, isEdit = false, name, progress_percentage, onCloseModal, onCloseDropdown } = props
+  const {todoId, itemId = 0, isEdit = false, name, progress_percentage, onCloseModal, onCloseDropdown} = props
   const [currentName] = useState(name ? name : '')
   const [currentProgress] = useState(progress_percentage ? progress_percentage : 0)
   const queryClient = useQueryClient()
@@ -44,16 +44,11 @@ export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps)
     name: name ? name : '',
     progress_percentage: progress_percentage ? `${progress_percentage.toString()}%` : '',
   }
-  const {
-    control,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm({
+  const {control, handleSubmit, setError, formState: {errors}} = useForm({
     defaultValues: defaultValues,
     resolver: joiResolver(createOrEditItemSchema),
   })
-  const onSubmit = ({ name, progress_percentage }: TCreateOrEditItem) => {
+  const onSubmit = ({name, progress_percentage}: TCreateOrEditItem) => {
     if (!todoId) {
       alert('Something went wrong!')
       return
@@ -154,7 +149,7 @@ export default function ModalCreateOrEditItem(props: ModalCreateOrEditItemProps)
           </BaseButton>
 
           <Show when={isEdit ? editItemMutation.isLoading : createItemMutation.isLoading}>
-            <Spinner />
+            <Spinner/>
           </Show>
           <Show when={isEdit ? !editItemMutation.isLoading : !createItemMutation.isLoading}>
             <BaseButton type='submit' className='border-2 border-primary hover:border-primary-dark'>

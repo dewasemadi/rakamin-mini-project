@@ -1,14 +1,13 @@
 import Joi from 'joi'
-import { useState } from 'react'
+import {useState} from 'react'
 import BaseButton from 'components/baseButton'
 import TextField from 'components/textField'
-import { joiResolver } from '@hookform/resolvers/joi'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { TRegister } from 'services/authService'
-import { useMutation } from 'react-query'
-import { register } from 'services/authService'
-import { Show } from 'components/show'
+import {joiResolver} from '@hookform/resolvers/joi'
+import {useForm} from 'react-hook-form'
+import {Link, useNavigate} from 'react-router-dom'
+import {register, TRegister} from 'services/authService'
+import {useMutation} from 'react-query'
+import {Show} from 'components/show'
 import Spinner from 'components/spinner'
 import CenterLayout from 'components/centerLayout'
 import Alert from 'components/alert'
@@ -21,9 +20,7 @@ const defaultValues = {
 }
 
 const registerSchema = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .required(),
+  email: Joi.string().email({tlds: {allow: false}}).required(),
   name: Joi.string().required(),
   password: Joi.string().min(6).required().label('Password'),
   password_confirmation: Joi.string()
@@ -39,20 +36,16 @@ const registerSchema = Joi.object({
 export default function Register() {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
-  const { mutate, reset, isError, isLoading } = useMutation(register, {
+  const {mutate, reset, isError, isLoading} = useMutation(register, {
     onSuccess: () => {
       reset()
-      navigate('/v1/login', { replace: true })
+      navigate('/v1/login', {replace: true})
     },
     onError: (error: any) => {
       setErrorMessage(error?.message)
     },
   })
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const {control, handleSubmit, formState: {errors},} = useForm({
     defaultValues: defaultValues,
     resolver: joiResolver(registerSchema),
   })
@@ -64,7 +57,7 @@ export default function Register() {
       <p className='text-neutral-90 mb-8'>Please create your account to continue</p>
 
       <Show when={isError}>
-        <Alert message={errorMessage} variant='danger' className='mb-4 -mt-4' />
+        <Alert message={errorMessage} variant='danger' className='mb-4 -mt-4'/>
       </Show>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -108,7 +101,7 @@ export default function Register() {
         />
 
         <Show when={isLoading}>
-          <Spinner className='mt-8' />
+          <Spinner className='mt-8'/>
         </Show>
         <Show when={!isLoading}>
           <BaseButton type='submit' variant='primary' className='w-full mt-8'>

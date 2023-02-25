@@ -1,15 +1,14 @@
 import Joi from 'joi'
-import { useState } from 'react'
+import {useState} from 'react'
 import BaseButton from 'components/baseButton'
 import TextField from 'components/textField'
-import { joiResolver } from '@hookform/resolvers/joi'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { TLogin } from 'services/authService'
-import { useMutation } from 'react-query'
-import { login } from 'services/authService'
-import { setTokenInLocalStorage } from 'utils/tokenManager'
-import { Show } from 'components/show'
+import {joiResolver} from '@hookform/resolvers/joi'
+import {useForm} from 'react-hook-form'
+import {Link, useNavigate} from 'react-router-dom'
+import {login, TLogin} from 'services/authService'
+import {useMutation} from 'react-query'
+import {setTokenInLocalStorage} from 'utils/tokenManager'
+import {Show} from 'components/show'
 import Spinner from 'components/spinner'
 import CenterLayout from 'components/centerLayout'
 import Alert from 'components/alert'
@@ -20,33 +19,27 @@ const defaultValues = {
 }
 
 const loginSchema = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .required(),
+  email: Joi.string().email({tlds: {allow: false}}).required(),
   password: Joi.string().min(6).required(),
 })
 
 export default function Login() {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
-  const { mutate, reset, isError, isLoading } = useMutation(login, {
+  const {mutate, reset, isError, isLoading} = useMutation(login, {
     onSuccess: (data) => {
       const token = data?.auth_token
       if (token) {
         setTokenInLocalStorage(token)
         reset()
-        navigate('/v1/todo', { replace: true })
+        navigate('/v1/todo', {replace: true})
       }
     },
     onError: (error: any) => {
       setErrorMessage(error?.message)
     },
   })
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const {control, handleSubmit, formState: {errors}} = useForm({
     defaultValues: defaultValues,
     resolver: joiResolver(loginSchema),
   })
@@ -58,7 +51,7 @@ export default function Login() {
       <p className='text-neutral-90 mb-8'>Welcome back, please login to your account</p>
 
       <Show when={isError}>
-        <Alert message={errorMessage} variant='danger' className='mb-4 -mt-4' />
+        <Alert message={errorMessage} variant='danger' className='mb-4 -mt-4'/>
       </Show>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -82,7 +75,7 @@ export default function Login() {
         />
 
         <Show when={isLoading}>
-          <Spinner className='mt-8' />
+          <Spinner className='mt-8'/>
         </Show>
         <Show when={!isLoading}>
           <BaseButton type='submit' variant='primary' className='w-full mt-8'>

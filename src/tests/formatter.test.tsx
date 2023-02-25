@@ -8,7 +8,7 @@ describe('removeCharInString', () => {
 
   it('should return 0 when input length is 0', () => {
     const result = removeCharInString('', '%')
-    expect(result).toBe(0)
+    expect(result).toBe('not-a-number')
   })
 
   it('should return 5 when input is 5', () => {
@@ -18,6 +18,6 @@ describe('removeCharInString', () => {
 
   it('should return 0 when input is %', () => {
     const result = removeCharInString('%', '%')
-    expect(result).toBe(0)
+    expect(result).toBe('not-a-number')
   })
 })

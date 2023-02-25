@@ -1,4 +1,4 @@
-import { createContext } from 'react'
-import { TGetTOdo } from 'services/todoService'
+import {createContext} from 'react'
+import {TGetTodo} from 'services/todoService'
 
-export const TodoContext = createContext<Array<TGetTOdo>>([])
+export const TodoContext = createContext<Array<TGetTodo>>([])

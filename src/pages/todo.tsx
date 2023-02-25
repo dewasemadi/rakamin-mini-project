@@ -2,25 +2,25 @@ import Header from 'components/header'
 import React from 'react'
 import CenterLayout from 'components/centerLayout'
 import Spinner from 'components/spinner'
-import { Show } from 'components/show'
-import { getTodos, TGetTOdo } from 'services/todoService'
+import {Show} from 'components/show'
+import {getTodos, TGetTodo} from 'services/todoService'
 import GroupCard from 'components/groupCard'
 import BaseButton from 'components/baseButton'
 import ArrowRight from 'assets/arrow-right.svg'
 import ArrowLeft from 'assets/arrow-left.svg'
-import { TodoContext } from 'context/todoContext'
-import { useResponsive } from 'hooks/useResponsive'
-import { getItemsById, updateItemsById } from 'services/itemService'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot, DropResult } from 'react-beautiful-dnd'
+import {TodoContext} from 'context/todoContext'
+import {useResponsive} from 'hooks/useResponsive'
+import {getItemsById, updateItemsById} from 'services/itemService'
+import {useMutation, useQuery, useQueryClient} from 'react-query'
+import {DragDropContext, Droppable, DroppableProvided, DroppableStateSnapshot, DropResult} from 'react-beautiful-dnd'
 
 export default function Todo() {
   let counter = 0
   const queryClient = useQueryClient()
-  const { isDesktop } = useResponsive()
+  const {isDesktop} = useResponsive()
   const scrollRef = React.createRef() as React.MutableRefObject<HTMLDivElement>
   const colors = ['green', 'yellow', 'red', 'lime']
-  const { data, isLoading: isTodosLoading } = useQuery<Array<TGetTOdo>>('todos', getTodos)
+  const {data, isLoading: isTodosLoading} = useQuery<Array<TGetTodo>>('todos', getTodos)
   const todosData = data ?? []
   const getItemMutation = useMutation(getItemsById)
   const updateItemMutation = useMutation(updateItemsById)
@@ -37,7 +37,7 @@ export default function Todo() {
   }
 
   const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result
+    const {source, destination} = result
     if (!destination) return
 
     const todoId = Number(source.droppableId)
@@ -68,12 +68,11 @@ export default function Todo() {
 
   return (
     <div>
-      <Header onScrollToRight={onScrollToRight} />
-      <Show when={isTodosLoading}>
-        <CenterLayout className='mt-[68px] max-sm:mt-[92px]'>
-          <Spinner />
-        </CenterLayout>
-      </Show>
+      <Header onScrollToRight={onScrollToRight}/><Show when={isTodosLoading}>
+      <CenterLayout className='mt-[68px] max-sm:mt-[92px]'>
+        <Spinner/>
+      </CenterLayout>
+    </Show>
       <Show when={todosData?.length === 0}>
         <CenterLayout className='mt-[68px] max-sm:mt-[92px]'>
           <p className='text-neutral-90 text-center'>No todos found</p>
@@ -97,7 +96,7 @@ export default function Todo() {
             >
               <DragDropContext onDragEnd={onDragEnd}>
                 <div className='grid gap-4 grid-flow-col pb-24'>
-                  {todosData?.map(({ id, title, description }: any, idx: number) => {
+                  {todosData?.map(({id, title, description}: any, idx: number) => {
                     if (counter % 4 === 0) counter = 0
                     const color = colors[counter]
                     counter++
